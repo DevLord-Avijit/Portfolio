@@ -32,6 +32,14 @@ input,
 textarea {
   outline: none;
 }
+/* Move the invisible reCAPTCHA badge to the bottom-right corner */
+.grecaptcha-badge {
+    right: 20px !important;
+    bottom: 20px !important;
+    left: auto !important;
+    top: auto !important;
+    z-index: 1000;
+}
 
 html,
 body {
@@ -73,89 +81,156 @@ section {
     transform: translateY(0);
   }
 }
+/* Base modal styles */
+#mailModal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  z-index: 10000;
+  background-color: white;
+  color: black;
+  font-family: sans-serif;
+  font-size: 20px;
+}
 
+/* Modal button */
+#mailModal button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  background-color: #333;
+  color: white;
+}
+
+/* Dark mode modal */
+body.dark-mode #mailModal {
+  background-color: #222;
+  color: #eee;
+  box-shadow: 0 4px 12px rgba(255,255,255,0.1);
+}
+
+body.dark-mode #mailModal button {
+  background-color: #eee;
+  color: #222;
+}
 /* ==== HEADER ==== */
 header {
   position: fixed;
-  top: 1.2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.764);
-  backdrop-filter: blur(12px);
-  border-radius: 3rem;
-  padding: 0.7rem 2rem;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  padding: 0.8rem 2rem;
   z-index: 1000;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  width: auto;
-  max-width: 92%;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
+
+/* Dark mode */
 body.dark-mode header {
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  background: rgba(18, 18, 18, 0.95);
+   box-shadow: 0 4px 8px rgba(255, 255, 255, 0.25); /* only downward */
 }
+/* ==== LOGO AREA ==== */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem; /* space between avatar & text */
+}
+
+.profile-pic {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+  object-fit: cover;
+  transition: transform 0.2s ease;
+}
+
+.profile-pic:hover {
+  transform: scale(1.08);
+}
+
+.logo a {
+  font-size: 1.6rem;
+  color: #000;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+body.dark-mode .logo a {
+  color: #fff;
+}
+
+body.dark-mode .profile-avatar {
+  border: 2px solid #444;
+}
+
 /* ==== CONTAINER ==== */
 .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: nowrap;
-  gap: 1.5rem;
-  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
-
 
 /* ==== LOGO ==== */
 .logo a {
-  font-size: 1.7rem;
-  color: #000000;
+  font-size: 1.6rem;
+  color: #000;
   font-weight: 700;
   text-decoration: none;
-  white-space: nowrap;
+}
+
+body.dark-mode .logo a {
+  color: #fff;
 }
 
 /* ==== NAVIGATION ==== */
-nav {
-  flex: 1 1 auto;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  position: relative;
-}
-
 nav ul {
   list-style: none;
   display: flex;
   align-items: center;
-  gap: 4.5rem;
+  gap: 2.5rem;
+  margin: 0;
 }
 
 nav a {
-  color: #000000;
+  color: #000;
   font-size: 1rem;
   text-decoration: none;
   font-weight: 500;
   padding: 0.4rem 0.9rem;
-  border-radius: 1rem;
+  border-radius: 0.6rem;
   transition: 0.2s ease-in-out;
 }
 
 nav a:hover {
   background: rgba(85, 85, 85, 0.12);
-  color: #000000;
+}
+
+body.dark-mode nav a {
+  color: #fff;
 }
 
 /* ==== TOGGLE BUTTON ==== */
 .nav-toggle {
   display: none;
-  font-size: 2rem;
+  font-size: 1.8rem;
   background: none;
   border: none;
-  color: #000000;
-  margin-left: 3rem;
   cursor: pointer;
   transition: transform 0.3s ease;
-  /* Smooth rotation */
 }
 
 /* Rotated state */
@@ -163,46 +238,19 @@ nav a:hover {
   transform: rotate(90deg);
 }
 
-
 /* ==== RESPONSIVE ==== */
 @media (max-width: 768px) {
-  header {
-    padding: 0.7rem 1rem;
-    border-radius: 2rem;
-    max-width: 95%;
-  }
-
-  .container {
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
-    gap: 3rem;
-  }
-
-  nav {
-    flex: 1 1 auto;
-    display: flex;
-    justify-content: flex-end;
-    position: relative;
-  }
-
   nav ul {
     display: none;
     flex-direction: column;
     position: absolute;
     top: 100%;
-    right: 0;
-    background-color: rgba(255, 255, 255, 0.90);
-    border-radius: 1rem;
+    right: 1rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 0.8rem;
     padding: 1rem;
-    width: max-content;
-    margin-top: 5rem;
-    min-width: 170px;
-    max-width: 90vw;
-    /* Prevent overflow on small screens */
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
-    text-align: right;
-    z-index: 999;
+    min-width: 160px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
   }
 
   nav ul.open {
@@ -210,24 +258,17 @@ nav a:hover {
   }
 
   nav a {
-    font-size: 1.7rem;
+    font-size: 1.2rem;
     padding: 0.6rem 1rem;
     white-space: nowrap;
   }
 
-  .nav-toggle,
-  .theme-toggle {
+  .nav-toggle {
     display: block;
-    position: relative;
-    margin-left: 0.5rem;
-    font-size: 2rem;
-    z-index: 1100;
-  }
-
-  #nav-links {
-    margin-top: 3.5rem;
+    color: inherit;
   }
 }
+
 
 
 h2 {
@@ -334,8 +375,8 @@ footer {
   grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
   gap: 3.5rem;
   padding: 5rem 1rem;
-  background: linear-gradient(135deg, #f9fcff51, #ffffff);
-  color: #1d1f27;
+  background: linear-gradient(135deg, #caf7fdcb, #ffffff);
+  color: #2a3045;
   scroll-snap-align: start;
   min-height: 100vh;
   animation: fadeInUp 0.8s ease-out forwards;
@@ -890,333 +931,245 @@ footer {
 
 
 /* ====Contact Section==== */
-
-:root {
-  --grey-primary: #444;
-  --grey-light: #e0e0e0;
-  --grey-dark: #333;
-  --btn-bg: #d3d3d3;
-  --btn-hover: #bcbcbc;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.contact-dashboard {
+/* 🌞 Light Mode (Default) */
+#contact-section {
+  position: relative;
+  width: 100%;
   min-height: 100vh;
-  padding: 3rem 1.5rem;
-  background: linear-gradient(to bottom right, #f1f1f3, #dde1e7);
-  font-family: 'Roboto', sans-serif;
-  color: var(--grey-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+  color: #0f172a;
+  font-family: "Inter", sans-serif;
+  overflow: hidden;
+  padding: 6rem 3rem;
+  /* more breathing room */
 }
 
-.dashboard-header {
-  text-align: center;
-  margin-bottom: 3rem;
-  padding: 0 1rem;
+.contact-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 20% 30%, rgba(0, 0, 0, 0.03), transparent 60%),
+    radial-gradient(circle at 80% 70%, rgba(0, 0, 0, 0.03), transparent 60%);
+  z-index: 1;
 }
 
-.dashboard-header h2 {
-  font-size: 2.2rem;
-  margin-bottom: 0.4rem;
-}
-
-.dashboard-header .highlight {
-  color: var(--grey-primary);
-}
-
-.dashboard-header p {
-  color: #666;
-  font-size: 1rem;
-}
-
-.dashboard-grid {
+.contact-content {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  max-width: 1400px;
+  width: 100%;
+  z-index: 2;
+  gap: 3rem;
+  align-items: start;
 }
 
-@media (min-width: 768px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr 1fr;
-  }
+/* Left Side */
+.contact-left h2 {
+  font-size: clamp(2rem, 2.5vw + 1rem, 3.2rem);
+  margin-bottom: 1.2rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-top: 3rem;
 }
 
-.dashboard-left,
-.dashboard-right {
-  background: #fff;
-  padding: 2rem;
-  border-radius: 25px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+.contact-left p {
+  font-size: clamp(1rem, 1vw + 0.5rem, 1.2rem);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  color: #475569;
+}
+
+.detail-item {
   display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.1rem;
+  margin-bottom: 0.8rem;
+  color: #1e293b;
 }
 
-/* Contact Form */
+.social-links {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.social-links a {
+  text-decoration: none;
+  color: #2563eb;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+  color: #1d4ed8;
+  transform: translateY(-2px);
+}
+
+.cv-btn {
+  display: inline-block;
+  margin-top: 2rem;
+  padding: 0.9rem 1.6rem;
+  background: #2563eb;
+  border-radius: 10px;
+  text-decoration: none;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.cv-btn:hover {
+  background: #1e40af;
+  transform: scale(1.05);
+}
+
+/* Right Side Form */
 .contact-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(14px);
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.contact-form h3 {
+  margin-bottom: 1.8rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1e293b;
 }
 
 .contact-form input,
 .contact-form textarea {
-  background: #f4f5f9;
-  border: none;
-  padding: 0.9rem 1rem;
-  border-radius: 12px;
-  font-size: 1rem;
   width: 100%;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1.2rem;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  outline: none;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 1rem;
+  transition: border 0.3s ease;
 }
 
 .contact-form input:focus,
 .contact-form textarea:focus {
-  outline: 1px solid var(--grey-dark);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: #94a3b8;
 }
 
 .contact-form button {
-  padding: 0.9rem;
-  background: var(--btn-bg);
+  width: 100%;
+  padding: 1rem;
+  background: #2563eb;
+  color: white;
+  font-weight: 600;
   border: none;
   border-radius: 10px;
-  font-weight: bold;
-  color: var(--grey-dark);
   cursor: pointer;
-  width: 100%;
-  transition: background 0.3s ease;
+  font-size: 1rem;
+  transition: all 0.3s ease;
 }
 
 .contact-form button:hover {
-  background: var(--btn-hover);
+  background: #1d4ed8;
+  transform: translateY(-2px);
 }
 
-/* Contact Info */
-.info-card {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  background: #f4f5f9;
-  padding: 1rem;
-  border-radius: 12px;
-  font-size: 1rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+/* 🌙 Dark Mode */
+body.dark-mode #contact-section {
+  background: linear-gradient(135deg, #000000, #151618);
+  color: #f8fafc;
 }
 
-.info-card img {
-  width: 24px;
-  height: 24px;
+body.dark-mode .contact-overlay {
+  background: radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.05), transparent 60%),
+    radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.05), transparent 60%);
 }
 
-.social-links {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
+body.dark-mode .contact-left h2,
+body.dark-mode .contact-left p,
+body.dark-mode .detail-item,
+body.dark-mode .contact-form h3 {
+  color: #f1f5f9;
 }
 
-.social-links img {
-  width: 30px;
-  height: 30px;
-  filter: grayscale(100%);
-  transition: transform 0.3s ease;
+body.dark-mode .social-links a {
+  color: #38bdf8;
 }
 
-.social-links img:hover {
-  transform: scale(1.1);
+body.dark-mode .social-links a:hover {
+  color: #60a5fa;
 }
 
-.download-btn {
-  background: var(--btn-bg);
-  color: var(--grey-dark);
-  padding: 0.75rem 1.5rem;
-  border-radius: 10px;
-  text-align: center;
-  font-weight: 500;
-  text-decoration: none;
-  transition: background 0.3s ease;
-  display: inline-block;
+body.dark-mode .cv-btn {
+  background: #38bdf8;
+  color: #0f172a;
 }
 
-.download-btn:hover {
-  background: var(--btn-hover);
+body.dark-mode .cv-btn:hover {
+  background: #0ea5e9;
 }
 
-/* Forum Section */
-.forum-title {
-  font-size: 1.5rem;
-  margin-bottom: 0.25rem;
+body.dark-mode .contact-form {
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
-.forum-description {
-  font-size: 0.95rem;
-  color: #666;
-  margin-bottom: 1.5rem;
-}
-
-.forum-wrapper {
-  display: flex;
-  flex-direction: column;
-  height: 500px;
-  border-radius: 20px;
-  background: #fff;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-  overflow: hidden;
-  position: relative;
-  padding: 1rem;
-}
-
-.forum-container {
-  flex: 1;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-  padding-right: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.forum-container::-webkit-scrollbar {
-  width: 6px;
-}
-
-.forum-container::-webkit-scrollbar-thumb {
-  background-color: var(--grey-light);
-  border-radius: 4px;
-}
-
-.forum-post {
-  background: #f4f5f9;
-  padding: 1rem;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
-}
-
-.forum-post-title {
-  font-size: 1.1rem;
-  margin-bottom: 0.3rem;
-  color: var(--grey-primary);
-}
-
-.forum-post-body {
-  color: #555;
-  font-size: 0.95rem;
-}
-
-.forum-placeholder {
-  font-style: italic;
-  color: #888;
-  margin-top: 1rem;
-}
-
-.forum-form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  padding-top: 0.5rem;
-  background: #fff;
-  position: sticky;
-  bottom: 0;
-}
-
-.forum-form input,
-.forum-form textarea {
-  background: #f4f5f9;
+body.dark-mode .contact-form input,
+body.dark-mode .contact-form textarea {
+  background: rgba(255, 255, 255, 0.08);
   border: none;
-  padding: 1rem;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-family: 'Roboto', sans-serif;
-  color: var(--grey-dark);
-  width: 100%;
+  color: #f8fafc;
 }
 
-.forum-form input:focus,
-.forum-form textarea:focus {
-  outline: 1px solid var(--grey-dark);
+body.dark-mode .contact-form input::placeholder,
+body.dark-mode .contact-form textarea::placeholder {
+  color: #94a3b8;
 }
 
-.forum-form button {
-  padding: 0.9rem;
-  background: var(--btn-bg);
-  border: none;
-  border-radius: 10px;
-  font-weight: bold;
-  color: var(--grey-dark);
-  cursor: pointer;
-  width: 100%;
-  transition: background 0.3s ease;
+body.dark-mode .contact-form button {
+  background: #38bdf8;
+  color: #0f172a;
 }
 
-.forum-form button:hover {
-  background: var(--btn-hover);
+body.dark-mode .contact-form button:hover {
+  background: #0ea5e9;
 }
 
-/* Media Queries for smaller devices */
-@media (max-width: 480px) {
-  .dashboard-header h2 {
-    font-size: 1.8rem;
-  }
-
-  .forum-title {
-    font-size: 1.3rem;
-  }
-
-  .contact-dashboard {
-    padding: 6rem 1rem;
-  }
-
-  .forum-wrapper {
-    height: 400px;
-  }
-}
-
-.dashboard-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.dashboard-card {
-  flex: 1 1 45%;
-  background: #fff;
-  padding: 2rem;
-  border-radius: 25px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  min-width: 320px;
-}
-
-.card-header h3 {
-  font-size: 1.6rem;
-  color: var(--grey-dark);
-  margin-bottom: 0.25rem;
-}
-
-.card-header p {
-  font-size: 0.95rem;
-  color: #666;
-}
-
+/* 📱 Responsive Tweaks */
 @media (max-width: 768px) {
-  .dashboard-card {
-    flex: 1 1 100%;
+  #contact-section {
+    padding: 3rem 1.5rem;
+  }
+
+  .contact-content {
+    gap: 2rem;
+  }
+
+  .contact-form {
+    padding: 2rem;
   }
 }
+
+
 
 /* =====Github And Contributions Section */
 
 .github-dashboard-section {
-  background: linear-gradient(135deg, #f5f8ff, #ffffff);
+  background: linear-gradient(135deg, #d8f4f8, #ffffff);
   padding: 5rem 3rem;
   color: #1d1f27;
   text-align: center;
@@ -1235,9 +1188,11 @@ footer {
   max-width: 1400px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
-  gap: 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* smaller min-width so more cards fit */
+  gap: 2rem;
   padding: 0 1rem;
+  justify-items: center;   /* centers items in their grid cells */
+  align-items: stretch;    /* makes all cards the same height */
 }
 
 .github-tile {
@@ -1245,9 +1200,10 @@ footer {
   border-radius: 1.5rem;
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
   backdrop-filter: blur(14px);
-  padding: 2rem;
+  padding: 1rem;
   transition: transform 0.3s ease;
   height: 100%;
+  max-width: 100%;
 }
 
 .github-tile:hover {
@@ -1392,7 +1348,7 @@ body.dark-mode {
 
 body.dark-mode header {
   background: rgba(28, 32, 38, 0.97);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.25); /* only downward */
 }
 
 body.dark-mode .logo a,
@@ -1666,9 +1622,10 @@ body.dark-mode .github-dashboard-section::after {
   background: #fff;
   opacity: 0.09;
 }
-
+/* Contact */
 .contact-dashboard,
 body.dark-mode .contact-dashboard {
+  background: linear-gradient(135deg, #23272f 0%, #181a1b 100%);
   position: relative;
   overflow: hidden;
 }
@@ -1789,14 +1746,14 @@ body.dark-mode button,
 body.dark-mode .contact-form button,
 body.dark-mode .forum-form button {
   color: #ffffff !important;
-  background: #000000 !important;
+  background: transparent !important;
 }
 
 body.dark-mode button:hover,
 body.dark-mode .contact-form button:hover,
 body.dark-mode .forum-form button:hover {
-  background: #000000 !important;
   color: #ffffff !important;
+  background-color: transparent !important;
 }
 
 /* Fix nav links in dark mode */
@@ -1821,10 +1778,16 @@ body.dark-mode nav a:hover {
     box-shadow: none !important;
   }
 }
+
 /* Dark mode navbar */
 body.dark-mode nav ul {
-  background-color: rgba(20, 20, 20, 0.95);
-  box-shadow: 0 6px 24px rgba(255, 255, 255, 0.1);
+  background-color: transparent !important ;
+  
+}
+@media screen and (max-width: 768px) {
+  body.dark-mode nav ul {
+    background-color: #111 !important;
+  }
 }
 
 body.dark-mode nav a {
@@ -1833,6 +1796,7 @@ body.dark-mode nav a {
 
 body.dark-mode .nav-toggle {
   color: #f1f1f1;
+  background-color: transparent !important;
 }
 
 
@@ -1877,7 +1841,7 @@ body.dark-mode {
 
 body.dark-mode header {
   background: rgba(18, 18, 18, 0.9);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+  
 }
 
 body.dark-mode .logo a,
@@ -1935,11 +1899,13 @@ body.dark-mode footer {
   background: #1e1e1e;
   color: #b0b0b0;
 }
+
 /* Scroll bar for pc screen */
 
 /* Dark mode scrollbar (works on all screen sizes) */
 body.dark-mode::-webkit-scrollbar {
-  width: 12px; /* visible on desktop */
+  width: 12px;
+  /* visible on desktop */
 }
 
 body.dark-mode::-webkit-scrollbar-track {
