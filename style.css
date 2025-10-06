@@ -8,7 +8,7 @@
   -webkit-user-select: none;
   font-size: 90%;
   /* or 14.4px if base is 16px */
-  /* Optional: Prevent text selection */
+  /* Optional: Prevent text selection. */
   user-select: none;
 
 }
@@ -681,8 +681,8 @@ footer {
   }
 
   .profile-avatar {
-    width: 350px;
-    height: 350px;
+    width: 250px;
+    height: 250px;
   }
 
   .profile-name,
@@ -1938,4 +1938,140 @@ body.dark-mode::-webkit-scrollbar-thumb {
 body.dark-mode * {
   scrollbar-width: thin;
   scrollbar-color: #444 #111;
+}
+
+/* ==== Contact Form with CAPTCHA ==== */
+
+#contactForm > div {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+#captchaImage {
+  height: 60px;
+  width: 150px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+body.dark-mode #captchaImage {
+  border: 1px solid #555;
+}
+
+/* Refresh Button */
+#contactForm button[type="button"] {
+  padding: 0.5rem 1rem;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+#contactForm button[type="button"]:hover {
+  background-color: #43a047;
+}
+
+body.dark-mode #contactForm button[type="button"] {
+  background-color: #66bb6a;
+}
+
+body.dark-mode #contactForm button[type="button"]:hover {
+  background-color: #57a05a;
+}
+
+/* ----------------------------
+   Submit Button
+---------------------------- */
+#contactForm button[type="submit"] {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: #2196f3;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#contactForm button[type="submit"]:hover {
+  background-color: #1976d2;
+}
+
+body.dark-mode #contactForm button[type="submit"] {
+  background-color: #42a5f5;
+}
+
+body.dark-mode #contactForm button[type="submit"]:hover {
+  background-color: #1e88e5;
+}
+
+/* ----------------------------
+   Modal
+---------------------------- */
+#mailModal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  z-index: 10000;
+  max-width: 90%;
+  text-align: center;
+  transition: background 0.3s, color 0.3s;
+}
+
+body.dark-mode #mailModal {
+  background: #1e1e1e;
+  color: #eee;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+}
+
+#mailModal button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  background-color: #4caf50;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#mailModal button:hover {
+  background-color: #43a047;
+}
+
+/* ----------------------------
+   Responsive
+---------------------------- */
+@media (max-width: 600px) {
+  #contactForm {
+    padding: 1.5rem;
+  }
+
+  #captchaImage {
+    height: 50px;
+    width: 120px;
+  }
+
+  #contactForm button[type="button"] {
+    padding: 0.4rem 0.8rem;
+  }
+
+  #contactForm button[type="submit"] {
+    padding: 0.6rem 1rem;
+  }
 }
