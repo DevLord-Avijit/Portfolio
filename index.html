@@ -7,7 +7,7 @@
   <title>Avijit Singh | Portfolio</title>
   <meta name="description" content="Avijit Singh | Full Stack Developer Portfolio" />
   <link rel="icon" href="assets/icons/favicon.png" />
-  <link rel="stylesheet" href="style.css?v=4.59">
+  <link rel="stylesheet" href="style.css?v=4.61">
 
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
@@ -282,26 +282,25 @@
             <a href="https://twitter.com/" target="_blank">Twitter</a>
             <a href="https://linkedin.com/" target="_blank">LinkedIn</a>
           </div>
-          
+
         </div>
       </div>
 
       <!-- Include reCAPTCHA API -->
       <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+      <form id="contactForm">
+        <input name="name" placeholder="Your Name" required>
+        <input name="email" placeholder="Your Email" type="email" required>
+        <textarea name="message" placeholder="Message" required></textarea>
 
-      <div class="contact-right">
-        <form class="contact-form" id="contactForm">
-          <h3>Send a Message</h3>
-          <input type="text" name="name" placeholder="Your Name" required />
-          <input type="email" name="email" placeholder="Your Email" required />
-          <textarea rows="5" name="message" placeholder="Your Message..." required></textarea>
+        <div>
+          <img id="captchaImage" src="" alt="CAPTCHA">
+          <input name="captchaText" placeholder="Enter CAPTCHA" required>
+          <button type="button" onclick="refreshCaptcha()">Refresh</button>
+        </div>
 
-          <button type="submit">Send Message</button>
-        </form>
-      </div>
-
-      <!-- Invisible reCAPTCHA placeholder outside the form/container -->
-      <div id="recaptcha-container"></div>
+        <button type="submit">Send Message</button>
+      </form>
 
       <div id="mailModal">
         <span id="modalMessage"></span>
@@ -310,35 +309,61 @@
 
       <script>
         const form = document.getElementById("contactForm");
-        let recaptchaWidget;
+        const submitBtn = form.querySelector("button[type='submit']");
+        let currentCaptchaId = "";
 
         function showModal(msg) {
-          const modal = document.getElementById("mailModal");
           document.getElementById("modalMessage").innerText = msg;
-          modal.style.display = "block";
+          document.getElementById("mailModal").style.display = "block";
         }
 
         function closeModal() {
           document.getElementById("mailModal").style.display = "none";
         }
 
+        function setProcessing(state) {
+          submitBtn.disabled = state;
+          submitBtn.innerText = state ? "Processing..." : "Send Message";
+        }
+
+        // Refresh CAPTCHA
+        function refreshCaptcha() {
+          fetch("https://flask-email-api-w0xd.onrender.com/captcha")
+            .then(res => {
+              currentCaptchaId = res.headers.get("Captcha-ID"); // now this works
+              return res.blob();
+            })
+            .then(blob => {
+              if (currentCaptchaId) { // sanity check
+                document.getElementById("captchaImage").src = URL.createObjectURL(blob);
+              } else {
+                console.error("CAPTCHA ID not received!");
+              }
+            })
+            .catch(err => console.error("Failed to load CAPTCHA:", err));
+        }
+
+
+        // Initial load
+        refreshCaptcha();
+
+        // Handle form submit
         form.addEventListener("submit", (e) => {
           e.preventDefault();
-          grecaptcha.execute(recaptchaWidget); // trigger invisible reCAPTCHA
-        });
+          setProcessing(true);
 
-        function onSubmit(token) {
           const payload = {
-            name: form.name.value,
-            email: form.email.value,
-            message: form.message.value,
-            recaptchaToken: token,
+            name: form.name.value.trim(),
+            email: form.email.value.trim(),
+            message: form.message.value.trim(),
+            captchaText: form.captchaText.value.trim(),
+            captchaId: currentCaptchaId
           };
 
           fetch("https://flask-email-api-w0xd.onrender.com/send-mail", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
+            body: JSON.stringify(payload)
           })
             .then(res => res.json())
             .then(result => {
@@ -346,36 +371,22 @@
                 showModal("✅ Message sent!");
                 form.reset();
               } else {
-                showModal("❌ Error: " + result.error);
+                showModal("❌ Error: " + (result.error || "Unknown error"));
+                refreshCaptcha();
               }
-              grecaptcha.reset(recaptchaWidget);
+              setProcessing(false);
             })
             .catch(err => {
               showModal("❌ Something went wrong.");
-              grecaptcha.reset(recaptchaWidget);
+              console.error(err);
+              refreshCaptcha();
+              setProcessing(false);
             });
-        }
-
-        window.onload = () => {
-          // Render the reCAPTCHA in the separate container
-          recaptchaWidget = grecaptcha.render("recaptcha-container", {
-            "sitekey": "6Ldc9LgrAAAAAA-9KEvwWbh1NlMZxzNlquIzVcnM",
-            "size": "invisible",
-            "badge": "bottomright", // optional, ensures proper badge position
-            "callback": onSubmit
-          });
-        };
+        });
       </script>
 
-      <style>
-        /* Force badge to bottom-right of the page */
-        .grecaptcha-badge {
-          position: fixed !important;
-          right: 10px !important;
-          bottom: 10px !important;
-          z-index: 1000;
-        }
-      </style>
+
+
 
 
     </div>
