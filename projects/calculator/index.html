@@ -211,19 +211,20 @@ function showResult(n1, n2, op){
     document.getElementById('copyBtn').style.display = "inline-block";
     document.getElementById('footer').style.display = "block";
 
-    // 🧠 Send analytics
-    fetch("https://avijitsingh.ct.ws/analytics/calculator.php", {
+    // 🧠 Send analytics via proxy to avoid CORS
+    const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+    fetch(proxyUrl + "https://avijitsingh.ct.ws/analytics/calculator.php", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({
-        n1, n2, op, result,
-        userAgent: navigator.userAgent,
-        time: new Date().toISOString()
+      body: new URLSearchParams({ 
+        n1, n2, op, result, 
+        userAgent: navigator.userAgent, 
+        time: new Date().toISOString() 
       })
     })
-    .then(r=>r.json())
-    .then(d=>console.log("Logged:", d))
-    .catch(e=>console.warn("Logging failed:", e));
+    .then(r => r.json())
+    .then(d => console.log("Logged via proxy:", d))
+    .catch(e => console.warn("Logging failed:", e));
 
   }, 1500);
 }
