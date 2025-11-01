@@ -252,10 +252,10 @@
                 document.getElementById('footer').style.display = "block";
 
                 // 🧠 Send analytics via proxy to avoid CORS
+                // 🧠 Send analytics directly to PHP with CORS handled
                 const url = "https://avijitsingh.ct.ws/analytics/calculator.php";
-                const proxy = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
 
-                fetch(proxy, {
+                fetch(url, {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
                     body: new URLSearchParams({
@@ -265,8 +265,9 @@
                     })
                 })
                     .then(r => r.json())
-                    .then(d => console.log("Logged via proxy:", d))
+                    .then(d => console.log("Logged successfully:", d))
                     .catch(e => console.warn("Logging failed:", e));
+
 
 
             }, 1500);
