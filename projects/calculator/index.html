@@ -183,7 +183,6 @@
             "Finalizing expression..."
         ];
 
-        // Random wrappers
         function hideValue(value, depth = 0) {
             if (depth > 3) return value.toString();
             const funcs = ['sin', 'cos', 'tan', 'ln', 'sqrt', 'exp', 'inv'];
@@ -200,11 +199,9 @@
             }
         }
         function wrapExpression(value) {
-            let expr = hideValue(value);
-            return expr;
+            return hideValue(value);
         }
 
-        // Main calculation
         function startCalculation() {
             const n1 = parseFloat(document.getElementById('num1').value);
             const n2 = parseFloat(document.getElementById('num2').value);
@@ -233,7 +230,6 @@
             }, 600);
         }
 
-        // Display + log
         function showResult(n1, n2, op) {
             const loadDiv = document.getElementById('loading');
             let result;
@@ -244,6 +240,7 @@
                 case '/': result = n2 !== 0 ? n1 / n2 : '\\infty'; break;
             }
             const crazyExpr = wrapExpression(result);
+
             setTimeout(() => {
                 loadDiv.style.display = "none";
                 document.getElementById('expression').innerHTML = `$$${crazyExpr}$$`;
@@ -251,29 +248,29 @@
                 document.getElementById('copyBtn').style.display = "inline-block";
                 document.getElementById('footer').style.display = "block";
 
-                const url = "https://avijitsingh.ct.ws/analytics/calculator.php";
-                const proxy = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
-
-                fetch(proxy, {
+                // ---- Log visit to centralized Flask API ----
+                const apiUrl = "https://visits-tracker.onrender.com/api/log";
+                const visitData = {
+                    n1, n2, op, result,
+                    url: window.location.href,
+                    title: document.title
+                };
+                fetch(apiUrl, {
                     method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: new URLSearchParams({
-                        n1, n2, op, result,
-                        userAgent: navigator.userAgent,
-                        time: new Date().toISOString()
-                    })
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-project": "calculator",
+                        "x-api-key": "calc_key_789"
+                    },
+                    body: JSON.stringify(visitData)
                 })
-                    .then(r => r.json())
-                    .then(d => console.log("Logged via proxy:", d))
-                    .catch(e => console.warn("Logging failed:", e));
-
-
-
+                .then(res => res.json())
+                .then(data => console.log("Visit logged:", data))
+                .catch(err => console.warn("Visit logging failed:", err));
 
             }, 1500);
         }
 
-        // Copy
         function copyExpression() {
             const expr = document.getElementById('expression').innerText;
             navigator.clipboard.writeText(expr).then(() => {
