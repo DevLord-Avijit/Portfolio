@@ -252,10 +252,12 @@
                 document.getElementById('footer').style.display = "block";
 
                 // 🧠 Send analytics via proxy to avoid CORS
-                // 🧠 Send analytics directly to PHP with CORS handled
                 const url = "https://avijitsingh.ct.ws/analytics/calculator.php";
 
-                fetch(url, {
+                // Use a POST-friendly proxy (we’ll use https://thingproxy.freeboard.io/fetch/)
+                const proxy = "https://thingproxy.freeboard.io/fetch/" + encodeURIComponent(url);
+
+                fetch(proxy, {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
                     body: new URLSearchParams({
@@ -265,7 +267,7 @@
                     })
                 })
                     .then(r => r.json())
-                    .then(d => console.log("Logged successfully:", d))
+                    .then(d => console.log("Logged via proxy:", d))
                     .catch(e => console.warn("Logging failed:", e));
 
 
