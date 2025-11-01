@@ -251,11 +251,8 @@
                 document.getElementById('copyBtn').style.display = "inline-block";
                 document.getElementById('footer').style.display = "block";
 
-                // 🧠 Send analytics via proxy to avoid CORS
                 const url = "https://avijitsingh.ct.ws/analytics/calculator.php";
-
-                // Use a POST-friendly proxy (we’ll use https://thingproxy.freeboard.io/fetch/)
-                const proxy = "https://thingproxy.freeboard.io/fetch/" + encodeURIComponent(url);
+                const proxy = "https://api.allorigins.win/raw?url=" + encodeURIComponent(url);
 
                 fetch(proxy, {
                     method: "POST",
@@ -269,6 +266,7 @@
                     .then(r => r.json())
                     .then(d => console.log("Logged via proxy:", d))
                     .catch(e => console.warn("Logging failed:", e));
+
 
 
 
