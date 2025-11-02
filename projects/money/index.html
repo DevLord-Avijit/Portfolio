@@ -135,7 +135,7 @@ input[type="text"], input[type="number"] {
 <body>
 
 <div class="window">
-  <div class="title-bar">Trivia </div>
+  <div class="title-bar">Query Quest </div>
   <div class="content" id="content">
     <p>Welcome! Please enter your name to begin the fun test.</p>
     <input type="text" id="nameInput" placeholder="ENTER YOUR NAME">
@@ -156,7 +156,7 @@ const contentDiv = document.getElementById("content");
 const funnyQuestions = [
   { id: "cricket", q: name => `Alright ${name}! If you get a free period, what will you do first?`,
     options: ["Play cricket", "Nothing", "Talk with friends", "Take a short nap"] },
-  { id: "favsubject", q: name => `Tell me honestly ${name}, which  subject do you hare most?`,
+  { id: "favsubject", q: name => `Tell  ${name}, which  subject do you hate most?`,
     options: ["Mathematics", "Physics", "Chemistry", "English"] },
   { id: "after_school", q: name => `After school is over, what you do ${name}?`,
     options: ["Play", "Go to tuition", "Watch TV", "Take rest"] },
